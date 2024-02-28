@@ -1,0 +1,221 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gg</title>
+</head>
+<body>
+    <script>(function() {
+        const radarCanvas = document.createElement('canvas');
+        radarCanvas.id = 'radar-canvas';
+        radarCanvas.style.position = 'absolute';
+        radarCanvas.style.top = '10px';
+        radarCanvas.style.left = '10px';
+        radarCanvas.width = 200;
+        radarCanvas.height = 200;
+        document.body.appendChild(radarCanvas);
+      
+        const radarContext = radarCanvas.getContext('2d');
+      
+        const gameCanvas = document.getElementById('gameCanvas');
+        const gameContext = gameCanvas.getContext('2d');
+      
+        let playerX = 0;
+        let playerY = 0;
+        let playerAngle = 0;
+      
+        const radarSettings = {
+          range: 1000, // Radar menzili
+          minimapScale: 0.5, // Minimap ölçeği
+          colors: {
+            friend: 'green',
+            enemy: 'red',
+            neutral: 'yellow',
+          },
+        };
+      
+        const radarMenu = document.createElement('div');
+        radarMenu.id = 'radar-menu';
+        radarMenu.style.position = 'absolute';
+        radarMenu.style.top = '10px';
+        radarMenu.style.right = '10px';
+        radarMenu.style.padding = '10px';
+        radarMenu.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        radarMenu.innerHTML = `
+          <h3>Radar Ayarları</h3>
+          <label for="range-input">Menzil:</label>
+          <input type="number" id="range-input" value="<span class="math-inline">\{radarSettings\.range\}" min\="100" max\="2000"\>
+      <br\>
+      <label for\="minimap\-scale\-input"\>Minimap Ölçeği\:</label\>
+      <input type\="number" id\="minimap\-scale\-input" value\="</span>{radarSettings.minimapScale}" min="0.1" max="1">
+          <br>
+          <label for="color-friend-input">Dost Gemi Rengi:</label>
+          <input type="color" id="color-friend-input" value="<span class="math-inline">\{radarSettings\.colors\.friend\}"\>
+      <br\>
+      <label for\="color\-enemy\-input"\>Düşman Gemi Rengi\:</label\>
+      <input type\="color" id\="color\-enemy\-input" value\="</span>{radarSettings.colors.enemy}">
+          <br>
+          <label for="color-neutral-input">Tarafsız Gemi Rengi:</label>
+          <input type="color" id="color-neutral-input" value="${radarSettings.colors.neutral}">
+        `;
+        document.body.appendChild(radarMenu);
+      
+        const minimapCanvas = document.createElement('canvas');
+        minimapCanvas.id = 'minimap-canvas';
+        minimapCanvas.style.position = 'absolute';
+        minimapCanvas.style.top = '10px';
+        minimapCanvas.style.right = '10px';
+        minimapCanvas.width = 100;
+        minimapCanvas.height = 100;
+        document.body.appendChild(minimapCanvas);
+      
+        const minimapContext = minimapCanvas.getContext('2d');
+      
+        let targetShip = null;
+      
+          setInterval(() => {
+            playerX = gameContext.canvas.width / 2;
+            playerY = gameContext.canvas.height / 2;
+            playerAngle = gameContext.transformedPoint(0, 0).y;
+      
+            radarContext.clearRect(0, 0, radarCanvas.width, radarCanvas.height);
+      
+            minimapContext.clearRect(0, 0, minimapCanvas.width, minimapCanvas.height);
+      
+            for (const ship of gameContext.ships) {
+              const shipX = ship.x - playerX;
+              const shipY = ship.y - playerY;
+      
+              const shipAngle = Math.atan2(shipY, shipX) - playerAngle;
+      
+              // Geminin mesafesini hesapla
+              const shipDistance = Math.sqrt(shipX ** 2 + shipY ** 2);
+      
+              // Gemiyi radara çiz
+              if (shipDistance <= radarSettings.range) {
+                radarContext.beginPath();
+                radarContext.arc(
+                  shipX * radarCanvas.width / gameCanvas.width,
+                  shipY * radarCanvas.height / gameCanvas.height,
+                  5,
+                  0,
+                  2 * Math.PI
+                );
+                radarContext.fillStyle =
+                  ship.team === player.team
+                    ? radarSettings.colors.friend
+                    : ship.team === 0
+                    ? radarSettings.colors.neutral
+                    : radarSettings.colors.enemy;
+                radarContext.fill();
+      
+                // Hedefleme sistemi
+                if (targetShip === ship) {
+                  radarContext.strokeStyle = 'white';
+                  radarContext.lineWidth = 2;
+                  radarContext.strokeRect(
+                    shipX * radarCanvas.width / gameCanvas.width - 10,
+                    shipY * radarCanvas.height / gameCanvas.height - 10,
+                    20,
+                    20
+                  );
+                }
+      
+                radarContext.fillStyle = 'white';
+                radarContext.font = '10px Arial';
+                radarContext.fillText(
+                  `${ship.type} - ${ship.health} HP - ${ship.shield} S`,
+                  shipX * radarCanvas.width / gameCanvas.width,
+                  shipY * radarCanvas.height / gameCanvas.height + 10
+                );
+              }
+      
+              minimapContext.beginPath();
+              minimapContext.arc(
+                shipX * minimapCanvas.width / gameCanvas.width,
+                shipY * minimapCanvas.height / gameCanvas.height,
+                2,
+                0,
+                2 * Math.PI
+              );
+              minimapContext.fillStyle =
+                ship.team === player.team
+                  ? radarSettings.colors.friend
+                  : ship.team === 0
+                  ? radarSettings.colors.neutral
+                  : radarSettings.colors.enemy;
+              minimapContext.fill();
+      
+              if (targetShip === ship) {
+                minimapContext.strokeStyle = 'white';
+                minimapContext.lineWidth = 2;
+                minimapContext.strokeRect(
+                  shipX * minimapCanvas.width / gameCanvas.width - 5,
+                  shipY * minimapCanvas.height / gameCanvas.height - 5,
+                  10,
+                  10
+                );
+              }
+      
+                     // Tehdit göstergeleri
+              if (ship.team !== player.team) {
+                const threatIndicatorSize = 10;
+                radarContext.beginPath();
+                radarContext.arc(
+                  shipX * radarCanvas.width / gameCanvas.width,
+                  shipY * radarCanvas.height / gameCanvas.height,
+                  threatIndicatorSize,
+                  0,
+                  2 * Math.PI
+                );
+                radarContext.fillStyle = 'rgba(255, 0, 0, 0.5)';
+                radarContext.fill();
+      
+      
+                // Hedefleme sistemi
+                radarCanvas.addEventListener('click', (e) => {
+                  if (
+                    e.clientX >= shipX * radarCanvas.width / gameCanvas.width &&
+                    e.clientX <= (shipX + threatIndicatorSize) * radarCanvas.width / gameCanvas.width &&
+                    e.clientY >= shipY * radarCanvas.height / gameCanvas.height &&
+                    e.clientY <= (shipY + threatIndicatorSize) * radarCanvas.height / gameCanvas.height
+                  ) {
+                    targetShip = ship;
+                  } else {
+                    targetShip = null;
+                  }
+                });
+              }
+            }
+      
+            minimapContext.beginPath();
+            minimapContext.arc(
+              playerX * minimapCanvas.width / gameCanvas.width,
+              playerY * minimapCanvas.height / gameCanvas.height,
+              5,
+              0,
+              2 * Math.PI
+            );
+            minimapContext.fillStyle = 'white';
+            minimapContext.fill();
+      
+            radarSettings.range = parseInt(document.getElementById('range-input').value);
+            radarSettings.minimapScale = parseFloat(
+              document.getElementById('minimap-scale-input').value
+            );
+            radarSettings.colors.friend = document.getElementById('color-friend-input').value;
+            radarSettings.colors.enemy = document.getElementById('color-enemy-input').value;
+            radarSettings.colors.neutral = document.getElementById('color-neutral-input').value;
+      
+            minimapContext.scale(radarSettings.minimapScale, radarSettings.minimapScale);
+            minimapContext.translate(
+              -playerX * minimapCanvas.width / gameCanvas.width / radarSettings.minimapScale,
+              -playerY * minimapCanvas.height / gameCanvas.height / radarSettings.minimapScale
+            );
+      
+          }, 100);
+      })();
+      </script>
+      
+</body>
+</html>
