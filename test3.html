@@ -10014,39 +10014,39 @@
                             })
                         }, t.prototype.buildTitaniumMaterial = function() {
                             return this.material = new THREE.MeshPhongMaterial({
-						map: AlloyMaterialMap,
-						bumpMap: AlloyMaterialMap,
-						specularMap: AlloyMaterialMap,
-						specular: 6316128,
-						shininess: 20,
-						bumpScale: .1,
-						color: 6316128,
-						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
-						emissiveMap: AlloyEmissiveMap
-					})
-				}, t.prototype.buildCarbonMaterial = function() {
-					return this.material = new THREE.MeshPhongMaterial({
-						map: AlloyMaterialMap,
-						bumpMap: AlloyMaterialMap,
-						specular: 6316128,
-						shininess: 5,
-						bumpScale: .1,
-						color: 1052688,
-						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
-						emissiveMap: CarbonEmissiveMap
+						        map: AlloyMaterialMap,
+						        bumpMap: AlloyMaterialMap,
+						        specularMap: AlloyMaterialMap,
+						        specular: 6316128,
+						        shininess: 20,
+						        bumpScale: .1,
+						        color: 6316128,
+						        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						        emissiveMap: AlloyEmissiveMap
+					        })
+				        }, t.prototype.buildCarbonMaterial = function() {
+					        return this.material = new THREE.MeshPhongMaterial({
+						        map: AlloyMaterialMap,
+						        bumpMap: AlloyMaterialMap,
+						        specular: 6316128,
+						        shininess: 5,
+						        bumpScale: .1,
+						        color: 1052688,
+						        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						        emissiveMap: CarbonEmissiveMap
 					})
 				}, t.prototype.buildFullColorMaterial = function() {
 					var t;
 					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
-						map: AlloyMaterialMap,
-						bumpMap: AlloyMaterialMap,
-						specularMap: AlloyMaterialMap,
-						specular: 12632256,
-						shininess: 50,
-						bumpScale: .1,
-						color: t,
-						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
-						emissiveMap: AlloyEmissiveMap
+						    map: AlloyMaterialMap,
+						    bumpMap: AlloyMaterialMap,
+						    specularMap: AlloyMaterialMap,
+						    specular: 12632256,
+						    shininess: 50,
+						    bumpScale: .1,
+						    color: t,
+						    emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						    emissiveMap: AlloyEmissiveMap
 					})
 				}, t.prototype.buildGoldMaterial = function() {
 					return this.material = new THREE.MeshPhongMaterial({
