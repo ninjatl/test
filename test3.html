@@ -2986,729 +2986,6 @@
         </p>
     </script>
     <script>
-         var url = "https://starblast.io";
-    var xhr = new XMLHttpRequest();
-    log("Fetching starblast src...");
-    xhr.open("GET", url);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-            var ClientCode = xhr.responseText;
-            if (ClientCode !== undefined) {
-                log(`Src fetched successfully`);
-            }
-            if (localStorage.getItem("gemColor1") === null) {
-                localStorage.setItem("gemColor1", "#ff0000");
-            }
-
-            if (localStorage.getItem("gemColor2") === null) {
-                localStorage.setItem("gemColor2", "#ff0000");
-            }
-            const start_time = performance.now();
-            log("Loading Mods...");
-            //Emotes
-            function modifyVocabulary(mode, additionalEmotes) {
-                const modeRegex = new RegExp(
-                    `(this\\.${mode}=function\\(e\\)\\{)([\\s\\S]*?)(this\\.vocabulary=\\[)([\\s\\S]*?)(\\])`
-                );
-                const matchMode = ClientCode.match(modeRegex);
-                if (matchMode) {
-                    const prefix = matchMode[1];
-                    const middleCode = matchMode[2];
-                    const vocabularyPrefix = matchMode[3];
-                    const existingVocabulary = matchMode[4];
-                    const suffix = matchMode[5];
-                    let modifiedVocabulary;
-                    if (mode === "DeathMatchMode" || mode === "BattleRoyaleMode") {
-                        modifiedVocabulary = additionalEmotes;
-                    } else {
-                        modifiedVocabulary = existingVocabulary + "," + additionalEmotes;
-                    }
-                    ClientCode = ClientCode.replace(
-                        modeRegex
-                        , `${prefix}${middleCode}${vocabularyPrefix}${modifiedVocabulary}${suffix}`
-                    );
-                }
-            }
-            //I dont suggest to edit the Keys, only test and icon!!!!
-            modifyVocabulary(
-                "TutorialMode"
-                , '{text:"Example",icon:"®",key:"I"},{text:"Example",icon:"®",key:"J"},{text:"Me",icon:"?",key:"E"},{text:"You",icon:">",key:"D"},{text:"IM a Loser",icon:" ",key:"V"}'
-            );
-            modifyVocabulary(
-                "SurvivalMode"
-                , '{text:"Example",icon:"®",key:"I"},{text:"Example",icon:"®",key:"J"},{text:"Me",icon:"?",key:"E"},{text:"You",icon:">",key:"D"},{text:"IM a Loser",icon:" ",key:"V"}'
-            );
-            modifyVocabulary(
-                "TeamMode"
-                , '{text:"Example",icon:"®",key:"I"},{text:"Example",icon:"®",key:"J"},{text:"contribute",icon:"°",key:"L"},{text:"Hello",icon:":",key:"W"},{ text: "Bye", icon: "F", key: "H" }'
-            );
-            modifyVocabulary(
-                "InvasionMode"
-                , '{text:"Example",icon:"®",key:"T"},{text:"Example",icon:"®",key:"J"},{text:"Alien",icon:"0",key:"W"},{text:"Boss",icon:"¿",key:"V"}'
-            );
-            modifyVocabulary(
-                "DeathMatchMode"
-                , '{text:"Good Game",icon:"GG",key:"G"}'
-            );
-            modifyVocabulary(
-                "BattleRoyaleMode"
-                , '{text:"Good Game",icon:"GG",key:"G"}'
-            );
-            modlog("Emotes added");
-            //Badges
-            const badgersus = localStorage.getItem("badgergers");
-
-            if (!badgersus) {
-                console.warn(
-                    `Local storage key "badgergers" not found or empty. Nothing will be loaded.`
-                );
-            } else {
-                const badgegersData = JSON.parse(badgersus);
-
-                if (Array.isArray(badgegersData) && badgegersData.length > 0) {
-                    const newCaseTemplate = `case "{name}": this.icon = "{url}"; break;`;
-                    let newCases = "";
-                    let newBadges = "";
-
-                    badgegersData.forEach(({
-                        name
-                        , url
-                    }) => {
-                        const sanitizedCaseName = name.replace(/\s/g, "");
-                        newCases += newCaseTemplate
-                            .replace("{name}", sanitizedCaseName)
-                            .replace("{url}", url);
-                        newBadges += `"${sanitizedCaseName}":"${name}",`;
-                    });
-
-                    const seasonalIndex = ClientCode.indexOf('case"seasonal":');
-                    if (seasonalIndex !== -1) {
-                        ClientCode =
-                            ClientCode.slice(0, seasonalIndex) +
-                            newCases +
-                            ClientCode.slice(seasonalIndex);
-                    }
-
-                    const blankIndex = ClientCode.indexOf('blank:"Blank"');
-                    if (blankIndex !== -1) {
-                        newBadges = newBadges.replace(/,\s*$/, "");
-                        ClientCode =
-                            ClientCode.slice(0, blankIndex + 'blank:"Blank"'.length) +
-                            "," +
-                            newBadges +
-                            ClientCode.slice(blankIndex + 'blank:"Blank"'.length);
-                    }
-                }
-            }
-            modlog("Badges added");
-            const lowercaseName = localStorage.getItem("lowercaseName");
-            const emotes = localStorage.getItem("Emote Capacity");
-            const gemColor1 = localStorage.getItem("gemColor1");
-            const gemColor2 = localStorage.getItem("gemColor2");
-            const stationisten = localStorage.getItem("Custom Station Models");
-            const weaponisten = localStorage.getItem("Custom Weapon Models");
-            const voicechat = localStorage.getItem("voicechat");
-            const blankbadge = localStorage.getItem("blankbadge");
-            //main settings
-            ClientCode = ClientCode.replace("LEADERBOARD", "Leaderboard");
-            if (voicechat) {
-                let vcscript = document.createElement("script");
-                vcscript.src =
-                    "https://vc.pixelmelt.dev/public/sbvc.user.js";
-                document.body.appendChild(vcscript);
-                modlog(`Voice Chat loaded`);
-            }
-            if (weaponisten === "true") {
-                let script = document.createElement("script");
-                script.src =
-                    "https://cdn.jsdelivr.net/gh/bhpsngum/starblast-snippets@latest/CustomWeaponModels/loader.user.js";
-                document.body.appendChild(script);
-                modlog(`Custom Weapons added`);
-            }
-
-            if (stationisten === "true") {
-                let sbibt = document.createElement("script");
-                sbibt.src =
-                    "https://cdn.jsdelivr.net/gh/bhpsngum/starblast-snippets@latest/CustomStationModuleModels/loader.user.js";
-                document.body.appendChild(sbibt);
-                modlog(`Custom Bases added`);
-            }
-
-            if (emotes) {
-                ClientCode = ClientCode.replace(/>=\s*4/, `>= ${emotes}`);
-                modlog(emotes + " Emotes added");
-            }
-
-            ClientCode = ClientCode.replace(/16711680/g, `"${gemColor1}"`);
-            ClientCode = ClientCode.replace(/specular:16744576/g, `specular:"${gemColor2}"`);
-            modlog("Crystal Color changed");
-
-            if (lowercaseName === "true") {
-                ClientCode = ClientCode.replace(/\.toUpperCase\(\)/g, "");
-                ClientCode = ClientCode.replace(/text-transform:uppercase;/gim, "");
-                modlog(`Lowercase added`);
-            }
-            if (blankbadge === "true") {
-                ClientCode = ClientCode.replace(
-                    /,\s*"blank"\s*!==\s*this\.custom\.badge/
-                    , ',"blank"'
-                );
-                ClientCode = ClientCode.replace(
-                    /default:t.fillStyle="hsl\(200,50%,20%\)"/
-                    , 'case"blank":t.fillStyle="hsla(50, 100%, 70%, 0)";break;default:t.fillStyle="hsl(200,50%,20%)"'
-                );
-                ClientCode = ClientCode.replace(
-                    /default:t.fillStyle="hsl\(50,100%,70%\)"/
-                    , 'case"star":t.fillStyle="hsl(50,100%,70%)",t.fillText("S",e/2,i/2);break;case"blank":t.fillStyle="hsla(50, 100%, 70%, 0)";break;default:t.fillStyle="hsl(50,100%,70%)"'
-                );
-            }
-            modlog(`Logo replaced`);
-            const end_time = performance.now();
-            log(`Loaded Mods successfully (${(end_time - start_time).toFixed(0)}ms)`);
-            document.open();
-            document.write(ClientCode);
-            document.close();
-            log("Document loaded");
-            setTimeout(() => {
-                stylelog("Loading Style");
-                console.log("Settings loaded");
-
-                var socialDie1 = document.querySelector(".social");
-
-                if (socialDie1) {
-                    var loveIcon = document.createElement("i");
-                    loveIcon.className = "sbg sbg-menu";
-                    socialDie1.appendChild(loveIcon);
-                    var settingstab = null;
-
-                    loveIcon.addEventListener("mousedown", function(event) {
-                        if (!settingstab) {
-                            //settings tab
-                            console.log("Settings opened");
-                            settingstab = document.createElement("div");
-                            settingstab.id = "settings-manager";
-                            settingstab.style.width = "500px";
-                            settingstab.style.background = "hsla(201, 100%, 50%, 0.3)";
-                            settingstab.style.borderRadius = "20px";
-                            settingstab.style.padding = "40px";
-                            settingstab.style.boxShadow = "0 0 10px rgba(0,0,0,.3)";
-                            settingstab.style.position = "fixed";
-                            settingstab.style.left = "50%";
-                            settingstab.style.top = "50%";
-                            settingstab.style.transform = "translate(-50%, -50%)";
-                            settingstab.style.backdropFilter = "blur(5px)";
-                            settingstab.style.webkitBackdropFilter = "blur(5px)";
-                            settingstab.style.zIndex = "9999";
-                            settingstab.style.display = "none";
-                            let offsetX
-                                , offsetY
-                                , isDragging = false;
-                            settingstab.addEventListener("mousedown", (e) => {
-                                const target = e.target;
-
-                                if (
-                                    target.tagName !== "INPUT" &&
-                                    target.tagName !== "BUTTON" &&
-                                    target.type !== "color" &&
-                                    target.type !== "range" &&
-                                    target.type !== "checkbox"
-                                ) {
-                                    isDragging = true;
-                                    offsetX =
-                                        e.clientX -
-                                        (settingstab.getBoundingClientRect().left +
-                                            settingstab.offsetWidth / 2);
-                                    offsetY =
-                                        e.clientY -
-                                        (settingstab.getBoundingClientRect().top +
-                                            settingstab.offsetHeight / 2);
-                                }
-                            });
-
-                            document.addEventListener("mousemove", (e) => {
-                                if (!isDragging) return;
-
-                                const x = e.clientX - offsetX;
-                                const y = e.clientY - offsetY;
-
-                                settingstab.style.left = `${x}px`;
-                                settingstab.style.top = `${y}px`;
-                            });
-
-                            document.addEventListener("mouseup", () => {
-                                isDragging = false;
-                            });
-                            //close button
-                            var closeButtonTopRight1 = document.createElement("button");
-                            closeButtonTopRight1.textContent = "X";
-                            closeButtonTopRight1.style.position = "absolute";
-                            closeButtonTopRight1.style.top = "10px";
-                            closeButtonTopRight1.style.right = "10px";
-                            closeButtonTopRight1.style.userSelect = "none";
-                            closeButtonTopRight1.addEventListener("click", function(event) {
-                                event.stopPropagation();
-                                settingstab.remove();
-                                settingstab = null;
-                            });
-                            settingstab.appendChild(closeButtonTopRight1);
-                            //header
-                            var header = document.createElement("h2");
-                            header.innerText = "Client Settings";
-                            header.style.userSelect = "none";
-                            header.style.pointerEvents = "none";
-                            settingstab.appendChild(header);
-                            //br element
-                            var br1 = document.createElement("br");
-                            br1.style.userSelect = "none";
-                            br1.style.pointerEvents = "none";
-                            //Lowercase Name
-                            var lwerlol = document.createElement("input");
-                            lwerlol.type = "checkbox";
-                            lwerlol.id = "lowercaseName";
-                            var lowerlol = document.createElement("label");
-                            lowerlol.htmlFor = "lowercaseName";
-                            lowerlol.appendChild(document.createTextNode("Lowercase Name"));
-                            lowerlol.style.userSelect = "none";
-                            lowerlol.style.pointerEvents = "none";
-                            //Custom Station Modules
-                            var molds = document.createElement("input");
-                            molds.type = "checkbox";
-                            molds.id = "customstation";
-                            var modls = document.createElement("label");
-                            modls.htmlFor = "customstation";
-                            modls.appendChild(document.createTextNode("Custom Station Models"));
-                            modls.style.userSelect = "none";
-                            modls.style.pointerEvents = "none";
-                            //Custom Weapon Modules
-                            var morlds = document.createElement("input");
-                            morlds.type = "checkbox";
-                            morlds.id = "customweapons";
-                            var mordls = document.createElement("label");
-                            mordls.htmlFor = "customweapons";
-                            mordls.appendChild(document.createTextNode("Custom Weapon Models"));
-                            mordls.style.userSelect = "none";
-                            mordls.style.pointerEvents = "none";
-                            //Voice Chat
-                            var oiceat = document.createElement("input");
-                            oiceat.type = "checkbox";
-                            oiceat.id = "voicechat";
-                            var voias = document.createElement("label");
-                            voias.htmlFor = "voicechat";
-                            voias.appendChild(document.createTextNode("Voice Chat"));
-                            voias.style.userSelect = "none";
-                            voias.style.pointerEvents = "none";
-                            //Blank Badges
-                            var ankages = document.createElement("input");
-                            ankages.type = "checkbox";
-                            ankages.id = "blankbadge";
-                            var anges = document.createElement("label");
-                            anges.htmlFor = "blankbadge";
-                            anges.appendChild(document.createTextNode("Blank Badges"));
-                            anges.style.userSelect = "none";
-                            anges.style.pointerEvents = "none";
-                            //Emotes
-                            var ebot = document.createElement("label");
-                            ebot.htmlFor = "emoteCapacity";
-                            ebot.classList.add("emote-label");
-                            ebot.style.userSelect = "none";
-                            ebot.style.pointerEvents = "none";
-                            ebot.htmlFor = "emoteCapacity";
-                            ebot.appendChild(document.createTextNode("Emote Capacity:"));
-                            var ebote = document.createElement("span");
-                            ebote.id = "emoteCapacityValue";
-                            ebote.classList.add("emote-value");
-                            ebote.appendChild(document.createTextNode("1"));
-                            ebote.style.userSelect = "none";
-                            ebote.style.pointerEvents = "none";
-                            var eboti = document.createElement("input");
-                            eboti.type = "range";
-                            eboti.id = "emoteCapacity";
-                            eboti.min = "1";
-                            eboti.max = "5";
-                            eboti.classList.add("emote-slider");
-                            //Gem Color
-                            var gemus = document.createElement("label");
-                            gemus.htmlFor = "gemColor1";
-                            gemus.classList.add("color-label");
-                            gemus.style.userSelect = "none";
-                            gemus.style.pointerEvents = "none";
-                            gemus.appendChild(document.createTextNode("Gem Color:"));
-                            var gembus = document.createElement("input");
-                            gembus.type = "color";
-                            gembus.id = "gemColor1";
-                            gembus.classList.add("color-input");
-                            //Gem Color 2
-                            var gemobus = document.createElement("label");
-                            gemobus.htmlFor = "gemColor2";
-                            gemobus.classList.add("color-label");
-                            gemobus.style.userSelect = "none";
-                            gemobus.style.pointerEvents = "none";
-                            gemobus.appendChild(document.createTextNode("Gem Color 2:"));
-                            var gembomus = document.createElement("input");
-                            gembomus.type = "color";
-                            gembomus.id = "gemColor2";
-                            gembomus.classList.add("color-input");
-                            //apply button
-                            var applythng = document.createElement("button");
-                            applythng.id = "applyChangesBtn";
-                            applythng.innerHTML = "Apply Changes";
-                            applythng.style.padding = "6px 10px";
-                            applythng.style.fontSize = ".95vw";
-                            applythng.style.cursor = "pointer";
-                            applythng.style.margin = "5px 0 0 0";
-                            applythng.style.textAlign = "center";
-                            applythng.style.background =
-                                "radial-gradient(ellipse at center, hsla(201, 100%, 27%,1) 0, hsla(201, 100%, 27%,.5) 150%)";
-                            applythng.style.boxShadow = "0 0 6px hsla(201,100%,80%,1)";
-                            applythng.style.textShadow = "0 0 7px hsla(201,100%,80%,1)";
-                            applythng.style.color = "hsla(201,100%,90%,.8)";
-                            applythng.style.fontFamily = "Play, Verdana";
-                            applythng.style.border = "0";
-                            applythng.style.borderRadius = "20px";
-
-                            //apply things to the Settings Menu
-                            settingstab.appendChild(lwerlol);
-                            settingstab.appendChild(lowerlol);
-                            settingstab.appendChild(br1.cloneNode());
-                            settingstab.appendChild(molds);
-                            settingstab.appendChild(modls);
-                            settingstab.appendChild(br1.cloneNode());
-                            settingstab.appendChild(morlds);
-                            settingstab.appendChild(mordls);
-                            settingstab.appendChild(br1.cloneNode());
-                            settingstab.appendChild(oiceat);
-                            settingstab.appendChild(voias);
-                            settingstab.appendChild(br1.cloneNode());
-                            settingstab.appendChild(ankages);
-                            settingstab.appendChild(anges);
-                            settingstab.appendChild(br1.cloneNode());
-                            settingstab.appendChild(ebot);
-                            settingstab.appendChild(ebote);
-                            settingstab.appendChild(eboti);
-                            settingstab.appendChild(br1.cloneNode());
-                            settingstab.appendChild(gemus);
-                            settingstab.appendChild(gembus);
-                            settingstab.appendChild(br1.cloneNode());
-                            settingstab.appendChild(gemobus);
-                            settingstab.appendChild(gembomus);
-                            settingstab.appendChild(br1.cloneNode());
-                            settingstab.appendChild(applythng);
-                            //apply Settings Menu to game
-                            document.body.appendChild(settingstab);
-                            settingstab.style.display = "block";
-                            loadSettings();
-                            attachEventListeners();
-                        }
-                    });
-                }
-
-                function attachEventListeners() {
-                    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                    checkboxes.forEach(function(checkbox) {
-                        checkbox.addEventListener("change", function() {
-                            saveSetting(checkbox.id, checkbox.checked);
-                        });
-                    });
-
-                    var rangeInput = document.getElementById("emoteCapacity");
-                    if (rangeInput) {
-                        rangeInput.addEventListener("input", function() {
-                            saveSetting("emoteCapacity", Number(rangeInput.value));
-                            document.getElementById("emoteCapacityValue").textContent =
-                                rangeInput.value;
-                        });
-                        rangeInput.value = getSettingValue("emoteCapacity");
-                        document.getElementById("emoteCapacityValue").textContent =
-                            rangeInput.value;
-                    }
-
-                    var colorInput = document.getElementById("gemColor");
-                    if (colorInput) {
-                        colorInput.addEventListener("input", function() {
-                            saveSetting("gemColor", colorInput.value);
-                        });
-                        colorInput.value = getSettingValue("gemColor");
-                    }
-                    var colorInput2 = document.getElementById("gemColor1");
-                    if (colorInput2) {
-                        colorInput2.addEventListener("input", function() {
-                            saveSetting("gemColor1", colorInput2.value);
-                        });
-                        colorInput2.value = getSettingValue("gemColor1");
-                    }
-
-                    var applyChangesBtn = document.getElementById("applyChangesBtn");
-                    if (applyChangesBtn) {
-                        applyChangesBtn.addEventListener("click", function() {
-                            saveSetting();
-                            location.reload();
-                        });
-                    }
-                }
-
-                function loadSettings() {
-                    var settings = [
-                        "emoteCapacity"
-
-
-                        , "gemColor1"
-
-
-                        , "gemColor2"
-
-
-                        , "lowercaseName"
-
-
-                        , "customstation"
-
-
-                        , "customweapons"
-
-
-                        , "voicechat"
-
-
-                        , "blankbadge"
-
-
-                    , ];
-
-                    settings.forEach(function(setting) {
-                        var key = getKey(setting);
-                        var value = localStorage.getItem(key);
-                        if (value !== null) {
-                            if (setting === "emoteCapacity") {
-                                document.getElementById(setting).value = value;
-                                document.getElementById("emoteCapacityValue").textContent = value;
-                            } else if (setting === "gemColor1") {
-                                document.getElementById(setting).value = value;
-                            } else if (setting === "gemColor2") {
-                                document.getElementById(setting).value = value;
-                            } else {
-                                document.getElementById(setting).checked = JSON.parse(value);
-                            }
-                        }
-                    });
-                }
-
-                function saveSetting(setting, value) {
-                    var key = getKey(setting);
-                    if (setting === "gemColor1") {
-                        localStorage.setItem(key, value);
-                    } else if (setting === "gemColor2") {
-                        localStorage.setItem(key, value);
-                    } else {
-                        localStorage.setItem(key, JSON.stringify(value));
-                    }
-                }
-
-                function getKey(setting) {
-                    switch (setting) {
-                        case "customweapons":
-                            return "Custom Weapon Models";
-                        case "customstation":
-                            return "Custom Station Models";
-                        case "emoteCapacity":
-                            return "Emote Capacity";
-                        case "gemColor1":
-                            return "gemColor1";
-                        case "gemColor2":
-                            return "gemColor2";
-                        case "lowercaseName":
-                            return "lowercaseName";
-                        case "voicechat":
-                            return "voicechat";
-                        case "blankbadge":
-                            return "blankbadge";
-                        default:
-                            return setting;
-                    }
-                }
-
-                function getSettingValue(setting) {
-                    var key = getKey(setting);
-                    var value = localStorage.getItem(key);
-
-                    if (setting === "emoteCapacity") {
-                        if (value === null) {
-                            localStorage.setItem(key, 4);
-                            return 4;
-                        } else {
-                            return Number(value);
-                        }
-                    } else if (setting === "gemColor") {
-                        return value || "#ff0000";
-                    } else if (setting === "gemColor1") {
-                        return value || "#ff0000";
-                    }
-
-                    return value ? JSON.parse(value) : false;
-                }
-
-
-                var socialDiv = document.querySelector('.social');
-
-                if (socialDiv) {
-                    var alienIcon = document.createElement('i');
-                    alienIcon.className = 'sbg sbg-alien';
-                    socialDiv.appendChild(alienIcon);
-                    var badgeManager = null;
-
-                    alienIcon.addEventListener('mousedown', function(event) {
-                        if (!badgeManager) {
-                            console.log('Badge manager opened');
-                            badgeManager = document.createElement('div');
-                            badgeManager.id = 'badge-manager';
-                            badgeManager.style.width = '500px';
-                            badgeManager.style.background = 'hsla(201, 100%, 50%, 0.3)';
-                            badgeManager.style.borderRadius = '20px';
-                            badgeManager.style.padding = '40px';
-                            badgeManager.style.boxShadow = '0 0 10px rgba(0,0,0,.3)';
-                            badgeManager.style.position = 'fixed';
-                            badgeManager.style.left = '50%';
-                            badgeManager.style.top = '50%';
-                            badgeManager.style.transform = 'translate(-50%, -50%)';
-                            badgeManager.style.backdropFilter = 'blur(5px)';
-                            badgeManager.style.webkitBackdropFilter = 'blur(5px)';
-                            badgeManager.style.zIndex = '9999'; // Set a high z-index to bring it to the front
-                            badgeManager.style.display = 'none';
-                            let offsetX, offsetY, isDragging = false;
-                            badgeManager.addEventListener('mousedown', (e) => {
-                                isDragging = true;
-                                offsetX = e.clientX - (badgeManager.getBoundingClientRect().left + badgeManager.offsetWidth / 2);
-                                offsetY = e.clientY - (badgeManager.getBoundingClientRect().top + badgeManager.offsetHeight / 2);
-                            });
-
-                            document.addEventListener('mousemove', (e) => {
-                                if (!isDragging) return;
-
-                                const x = e.clientX - offsetX;
-                                const y = e.clientY - offsetY;
-
-                                badgeManager.style.left = `${x}px`;
-                                badgeManager.style.top = `${y}px`;
-                            });
-
-                            document.addEventListener('mouseup', () => {
-                                isDragging = false;
-                            });
-                            var closeButtonTopRight = document.createElement('button');
-                            closeButtonTopRight.textContent = 'X';
-                            closeButtonTopRight.style.position = 'absolute';
-                            closeButtonTopRight.style.top = '10px';
-                            closeButtonTopRight.style.right = '10px';
-                            closeButtonTopRight.style.userSelect = 'none';
-
-                            closeButtonTopRight.addEventListener('click', function(event) {
-                                event.stopPropagation();
-                                badgeManager.remove();
-                                badgeManager = null;
-                            });
-
-                            badgeManager.appendChild(closeButtonTopRight);
-
-                            var header = document.createElement('h2');
-                            header.innerText = 'Badge Manager';
-                            header.style.userSelect = 'none';
-                            header.style.pointerEvents = 'none';
-                            badgeManager.appendChild(header);
-
-                            var addBadgeButton = document.createElement('button');
-                            addBadgeButton.innerText = 'Add Badge';
-                            addBadgeButton.style.userSelect = 'none';
-                            addBadgeButton.onclick = function() {
-                                var name = prompt('Enter a name for the badge:');
-                                if (name !== null && name !== '') {
-                                    var url = prompt('Enter a valid link with jpg or png:');
-                                    if (url !== null && validateUrl(url)) {
-                                        saveBadge(name, url);
-                                        location.reload();
-                                        displayBadge(name, url);
-                                    } else {
-                                        alert('Please enter a valid link with jpg or png.');
-                                    }
-                                }
-                            };
-                            badgeManager.appendChild(addBadgeButton);
-
-                            document.body.appendChild(badgeManager);
-                            badgeManager.style.display = 'block';
-                            var savedBadges = JSON.parse(localStorage.getItem('badgergers')) || [];
-                            savedBadges.forEach(function(badge) {
-                                displayBadge(badge.name, badge.url);
-                            });
-                        }
-                    });
-                }
-
-                function validateUrl(url) {
-                    var regex = /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;
-                    return regex.test(url);
-                }
-
-                function saveBadge(name, url) {
-                    var badges = JSON.parse(localStorage.getItem('badgergers')) || [];
-                    badges.push({
-                        "name": name
-                        , "url": url
-                    });
-                    localStorage.setItem('badgergers', JSON.stringify(badges));
-                }
-
-                function displayBadge(name, url) {
-                    var badge = document.createElement('div');
-                    badge.style.display = 'flex';
-                    badge.style.alignItems = 'center';
-                    badge.style.marginBottom = '10px';
-
-                    var img = document.createElement('img');
-                    img.src = url;
-                    img.style.width = '64px';
-                    img.style.height = '64px';
-                    img.style.userSelect = 'none';
-                    img.style.pointerEvents = 'none';
-                    badge.appendChild(img);
-
-                    var badgeName = document.createElement('p');
-                    badgeName.innerText = name;
-                    badgeName.style.marginLeft = '10px';
-                    badgeName.style.userSelect = 'none';
-                    badgeName.style.pointerEvents = 'none';
-                    badge.appendChild(badgeName);
-
-                    var closeButton = document.createElement('button');
-                    closeButton.innerText = 'x';
-                    closeButton.style.marginLeft = 'auto';
-                    closeButton.style.userSelect = 'none';
-                    closeButton.style.userSelect = 'none';
-                    closeButton.onclick = function() {
-                        badge.remove();
-                        location.reload();
-                        updateLocalStorage();
-                    };
-                    badge.appendChild(closeButton);
-
-                    badgeManager.appendChild(badge);
-                }
-
-                function updateLocalStorage() {
-                    var badges = [];
-                    document.querySelectorAll('#badge-manager div').forEach(function(badgeElement) {
-                        var name = badgeElement.querySelector('p').innerText;
-                        var url = badgeElement.querySelector('img').src;
-                        badges.push({
-                            "name": name
-                            , "url": url
-                        });
-                    });
-
-                    if (badges.length > 0) {
-                        localStorage.setItem('badgergers', JSON.stringify(badges));
-                    } else {
-                        localStorage.removeItem('badgergers');
-                    }
-                } 
         (function(s, t, a, r, b, l, i, o) {
             var saveAs, I0I1O, extend, hasProp, OI1O1, llI10, BuyWeaponButton, HealingButton, RemoveWeaponButton, StoreCountDown, TransferButton, WeaponStoreBackground, WeaponStoreExitButton, WeaponStorePlaceholder, WeaponStoreShipView, WeaponStoreTitle, deepspaceworker, workerfunk, nebulasworker, Scene, lI01I, I1O00, III01, llOl1, BATTLE_SHIP_TYPES, WEAPON_TYPES, ALIEN_TYPES, l0OI1, I011O, l1lI0, l00lI, I1l01, STATION_MODULES, ATTACK_POD_MODEL, DEFENCE_POD_MODEL, MINING_POD_MODEL, i, MISSILE_MODEL, ROCKET_MODEL, TORPEDO_MODEL, MINE2_MODEL, MINE_MODEL, j, k, l, m, expand, bind, IFrameDetection, O01O1, base, indexOf, I11OO, BATTLE_SHIPS, arrayMult, ALIEN_MODELS, HALO_MODELS, GIFT_MODEL, PUMPKIN_MODEL, battle_finished, battle_started, IOI0l, exportShipTree, IIO1I, gamesettings, Translations, t, texists, translations;
             ! function(t) {
@@ -10641,18 +9918,66 @@
                             var e, i, s;
                             switch (null == t && (t = 10), this.built_material = this.finish, this.finish) {
                                 case "alloy":
-                                    this.buildAlloyMaterial();
-                                    break;
-                                case "gold":
-                                    this.buildGoldMaterial();
-                                    break;
-                                case "titanium":
-                                    this.buildTitaniumMaterial();
-                                    break;
-                                case "carbon":
-                                    this.buildCarbonMaterial();
-                                    break;
-                                default:
+                            this.buildAlloyMaterial();
+                            break;
+                        case "gold":
+                            this.buildGoldMaterial();
+                            break;
+                        case "titanium":
+                            this.buildTitaniumMaterial();
+                            break;
+                        case "carbon":
+                            this.buildCarbonMaterial();
+                            break;
+                        case "X27":
+                            this.buildX27Material();
+                            break;
+                        case "FullColor":
+                            this.buildFullColorMaterial();
+                            break;
+                        case "Copper":
+                            this.buildCopperMaterial();
+                            break;
+                        case "Diamond":
+                            this.buildDiamondMaterial();
+                            break;
+                        case "Ruby":
+                            this.buildRubyMaterial();
+                            break;
+                        case "Emerald":
+                            this.buildEmeraldMaterial();
+                            break;
+                        case "Sapphire":
+                            this.buildSapphireMaterial();
+                            break;
+                        case "Amethyst":
+                            this.buildAmethystMaterial();
+                            break;
+						case "Onyx":
+                            this.buildOnyxMaterial();
+                            break;
+						case "TopazYellow":
+                            this.buildTopazYellowMaterial();
+                            break;
+                        case "Strawberry":
+                            this.buildStrawberryMaterial();
+                            break;
+						case "Crystal":
+                            this.buildCrystalMaterial();
+                            break;
+                        case "SeaGreen":
+                            this.buildSeaGreenMaterial();
+                            break;
+                        case "Cyan":
+                            this.buildCyanMaterial();
+                            break;
+						case "MidnightBlue":
+                            this.buildMidnightBlueMaterial();
+                            break;
+                        case "Peony":
+                            this.buildPeonyMaterial();
+                            break;
+						default:
                                     this.buildDefaultMaterial()
                             }
                             return this.base_color = this.material.color.getHex(), s = this.base_color >> 16 & 255, i = this.base_color >> 8 & 255, e = 255 & this.base_color, this.dark_color = Math.floor(s / 2) << 16 | Math.floor(i / 2) << 8 | Math.floor(e / 2), this.material
@@ -10689,78 +10014,239 @@
                             })
                         }, t.prototype.buildTitaniumMaterial = function() {
                             return this.material = new THREE.MeshPhongMaterial({
-                                map: l00lI,
-                                bumpMap: l00lI,
-                                specularMap: l00lI,
-                                specular: 6316128,
-                                shininess: 20,
-                                bumpScale: .1,
-                                color: 6316128,
-                                emissive: lI0IO.hsvToRgbHex(this.hue, .5, 1),
-                                emissiveMap: I011O
-                            })
-                        }, t.prototype.buildCarbonMaterial = function() {
-                            return this.material = new THREE.MeshPhongMaterial({
-                                map: l00lI,
-                                bumpMap: l00lI,
-                                specular: 6316128,
-                                shininess: 5,
-                                bumpScale: .1,
-                                color: 1052688,
-                                emissive: lI0IO.hsvToRgbHex(this.hue, .5, 1),
-                                emissiveMap: l0OI1
-                            })
-                        }, t.prototype.buildFullColorMaterial = function() {
-                            var t;
-                            return t = lI0IO.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
-                                map: l00lI,
-                                bumpMap: l00lI,
-                                specularMap: l00lI,
-                                specular: 12632256,
-                                shininess: 50,
-                                bumpScale: .1,
-                                color: t,
-                                emissive: lI0IO.hsvToRgbHex(this.hue, .5, 1),
-                                emissiveMap: I011O
-                            })
-                        }, t.prototype.buildGoldMaterial = function() {
-                            return this.material = new THREE.MeshPhongMaterial({
-                                map: l00lI,
-                                bumpMap: l00lI,
-                                specularMap: l00lI,
-                                specular: 10506256,
-                                shininess: 50,
-                                bumpScale: .1,
-                                color: 8413232,
-                                emissive: lI0IO.hsvToRgbHex(this.hue, .5, 1),
-                                emissiveMap: I011O
-                            })
-                        }, t.prototype.buildCopperMaterial = function() {
-                            return this.material = new THREE.MeshPhongMaterial({
-                                map: l00lI,
-                                bumpMap: l00lI,
-                                specularMap: l00lI,
-                                specular: 11554864,
-                                shininess: 15,
-                                bumpScale: .1,
-                                color: 10514512,
-                                emissive: lI0IO.hsvToRgbHex(this.hue, .5, 1),
-                                emissiveMap: I011O
-                            })
-                        }, t.prototype.buildDiamondMaterial = function() {
-                            return this.material = new THREE.MeshPhongMaterial({
-                                map: l00lI,
-                                bumpMap: l00lI,
-                                specular: 16777215,
-                                opacity: .5,
-                                shininess: 50,
-                                side: THREE.DoubleSide,
-                                bumpScale: .1,
-                                transparent: !0,
-                                color: 8421504,
-                                emissive: lI0IO.hsvToRgbHex(this.hue, .5, 1),
-                                emissiveMap: I011O
-                            })
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+						specular: 6316128,
+						shininess: 20,
+						bumpScale: .1,
+						color: 6316128,
+						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+					})
+				}, t.prototype.buildCarbonMaterial = function() {
+					return this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specular: 6316128,
+						shininess: 5,
+						bumpScale: .1,
+						color: 1052688,
+						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: CarbonEmissiveMap
+					})
+				}, t.prototype.buildFullColorMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+						specular: 12632256,
+						shininess: 50,
+						bumpScale: .1,
+						color: t,
+						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+					})
+				}, t.prototype.buildGoldMaterial = function() {
+					return this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+						specular: 10506256,
+						shininess: 50,
+						bumpScale: .1,
+						color: 8413232,
+						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+					})
+				}, t.prototype.buildCopperMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+						specular: 11554864,
+						shininess: 15,
+						bumpScale: .1,
+						color: 10514512,
+						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+					})
+				}, t.prototype.buildDiamondMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specular: 16777215,
+						opacity: .5,
+						shininess: 50,
+						side: THREE.DoubleSide,
+						bumpScale: .1,
+						transparent: !0,
+						color: 8421504,
+						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+					})
+				}, t.prototype.buildMidnightBlueMaterial = function() {
+                    var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 3289700,
+                        opacity: 0.7,
+                        shininess: 500,
+                        bumpScale: .1,
+                        side: THREE.DoubleSide,
+                        reflectivity: 1,
+                        transparent: !0,
+                        color: 2631780,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 50),
+                        emissiveMap: AlloyEmissiveMap
+                    })
+                }, t.prototype.buildOnyxMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+                        specular: 3618615,
+                        shininess: 100,
+                        bumpScale: .1,
+                        color: 1052688,
+						emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: CarbonEmissiveMap
+                    })
+                }, t.prototype.buildCrystalMaterial = function() {
+                    var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 16752704,
+                        shininess: 50,
+                        bumpScale: .1,
+                        color: 16711680,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+                        emissiveMap: AlloyEmissiveMap
+                    })
+                }, t.prototype.buildSeaGreenMaterial = function() {
+                    var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 2097039,
+                        shininess: 50,
+                        bumpScale: .1,
+                        color: 1240448,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+                        emissiveMap: AlloyEmissiveMap
+                    })
+                }, t.prototype.buildCyanMaterial = function() {
+                    var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 2940397,
+                        shininess: 150,
+                        bumpScale: .1,
+                        color: 57589,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .10, 1),
+                        emissiveMap: AlloyEmissiveMap
+                    })
+                }, t.prototype.buildPeonyMaterial = function() {
+                    var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 13840754,
+                        shininess: 600,
+                        bumpScale: .1,
+                        color: 10361423,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .10, 50),
+                        emissiveMap: AlloyEmissiveMap
+                    })
+				}, t.prototype.buildRubyMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 16741749,
+                        shininess: 30,
+                        bumpScale: .1,
+                        color: 15402240,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+                    })
+                }, t.prototype.buildEmeraldMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 54903,
+                        shininess: 50,
+                        bumpScale: .1,
+                        color: 54865,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+                    })
+                }, t.prototype.buildSapphireMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 4078578,
+                        shininess: 50,
+                        bumpScale: .1,
+                        color: 196822,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+                    })
+            	}, t.prototype.buildAmethystMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                    	specular: 12632256,
+                    	shininess: 50,
+                    	bumpScale: .1,
+                    	color: 13369558,
+                    	emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+						emissiveMap: AlloyEmissiveMap
+                	})
+                }, t.prototype.buildTopazYellowMaterial = function() {
+                    var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 16702572,
+                        shininess: 30,
+                        bumpScale: .1,
+                        color: 16696587,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+                        emissiveMap: AlloyEmissiveMap
+                    })
+                }, t.prototype.buildStrawberryMaterial = function() {
+					var t;
+					return t = AlloyEmissiveMaterial.hsvToRgbHex(this.hue, 1, 1), this.material = new THREE.MeshPhongMaterial({
+						map: AlloyMaterialMap,
+						bumpMap: AlloyMaterialMap,
+						specularMap: AlloyMaterialMap,
+                        specular: 6709917,
+                        shininess: 50,
+                        bumpScale: .1,
+                        color: 16711777,
+                        emissive: AlloyEmissiveMaterial.hsvToRgbHex(this.hue, .5, 1),
+                        emissiveMap: AlloyEmissiveMap
+                    })
                         }, t.prototype.I1III = function(t) {
                             var e, i;
                             if (this.built_material !== this.finish && (this.ll01I(this.hue), this.I0001.material = this.material), this.options.shield && (this.shield_mesh.visible = !1), this.material.color.setHex(this.base_color), this.invulnerable ? Date.now() % 500 < 250 ? (this.material.emissive.setHex(lI0IO.hsvToRgbHex(this.hue, .5, .5)), this.material.color.setHex(this.dark_color), this.options.shield && (this.shield_mat.color.setHex(lI0IO.hsvToRgbHex(this.hue, .5, 1)), this.shield_mesh.visible = !0)) : (this.material.emissive.set(lI0IO.hsvToRgbHex(this.hue, .5, 1)), this.material.color.setHex(this.base_color), this.options.shield && this.shield_mat.color.setHex(0)) : this.I0llO > 0 && (this.IOI00 = Math.random() < this.I0llO ? 1 : 0, this.options.shield && (this.shield_mesh.visible = !0), 1 === this.IOI00 ? (this.material.emissive.setHex(lI0IO.hsvToRgbHex(this.hue, .5, .5)), this.material.color.setHex(this.dark_color), this.options.shield && this.shield_mat.color.setHex(lI0IO.hsvToRgbHex(this.hue, .5, 1))) : (this.material.emissive.set(lI0IO.hsvToRgbHex(this.hue, .5, 1)), this.material.color.setHex(this.base_color), this.options.shield && this.shield_mat.color.setHex(0)), this.I0llO *= .95, this.I0llO < .1 && (this.I0llO = 0, this.options.shield && (this.shield_mesh.visible = !1), this.material.color.setHex(this.base_color), this.material.emissive.set(lI0IO.hsvToRgbHex(this.hue, .5, 1)))), this.bumping && (t > this.bumpframe + 30 ? (this.bumping = !1, this.OIllO.scale.set(2 * this.data.size, 2 * this.data.size, 2 * this.data.size)) : (i = Math.max(0, t - this.bumpframe) / 30, e = 1.5 - Math.cos(Math.pow(i, .5) * (180 * THREE.Math.DEG2RAD) * 2), this.OIllO.scale.set(2 * this.data.size * e, 2 * this.data.size * e, 2 * this.data.size * e))), this.last_frame = t, this.bump_shield && this.options.shield) return t > this.bump_shield_frame + 30 ? (this.bump_shield = !1, this.shield_mesh.scale.set(1.2, 1.2, 1.2)) : (i = Math.max(0, t - this.bump_shield_frame) / 30, e = 1.2 - .1 * Math.cos(Math.pow(i, .5) * (180 * THREE.Math.DEG2RAD) * 2), this.shield_mesh.scale.set(e, e, e), this.shield_mat.color.setHex(lI0IO.hsvToRgbHex(this.hue, .5, Math.pow(1 - i, .25))), this.shield_mesh.visible = !0)
@@ -12689,19 +12175,61 @@
                             case "gold":
                                 this.buildGoldMaterial();
                                 break;
-                            case "titanium":
-                                this.buildTitaniumMaterial();
-                                break;
-                            case "carbon":
-                                this.buildCarbonMaterial();
-                                break;
-                            case "copper":
-                                this.buildCopperMaterial();
-                                break;
-                            case "diamond":
-                                this.buildDiamondMaterial();
-                                break;
-                            default:
+                                case "titanium":
+                            this.buildTitaniumMaterial();
+                            break;
+                        case "carbon":
+                            this.buildCarbonMaterial();
+                            break;
+                        case "X27":
+                            this.buildX27Material();
+                            break;
+                        case "FullColor":
+                            this.buildFullColorMaterial();
+                            break;
+                        case "Copper":
+                            this.buildCopperMaterial();
+                            break;
+                        case "Diamond":
+                            this.buildDiamondMaterial();
+                            break;
+                        case "Ruby":
+                            this.buildRubyMaterial();
+                            break;
+                        case "Emerald":
+                            this.buildEmeraldMaterial();
+                            break;
+                        case "Sapphire":
+                            this.buildSapphireMaterial();
+                            break;
+                        case "Amethyst":
+                            this.buildAmethystMaterial();
+                            break;
+						case "Onyx":
+                            this.buildOnyxMaterial();
+                            break;
+						case "TopazYellow":
+                            this.buildTopazYellowMaterial();
+                            break;
+                        case "Strawberry":
+                            this.buildStrawberryMaterial();
+                            break;
+						case "Crystal":
+                            this.buildCrystalMaterial();
+                            break;
+                        case "SeaGreen":
+                            this.buildSeaGreenMaterial();
+                            break;
+						case "MidnightBlue":
+                            this.buildMidnightBlueMaterial();
+                            break;
+                        case "Cyan":
+                            this.buildCyanMaterial();
+                            break;
+                        case "Peony":
+                            this.buildPeonyMaterial();
+                            break;
+                         default:
                                 this.buildDefaultMaterial()
                         }
                         return this.base_color = this.material.color.getHex(), s = this.base_color >> 16 & 255, i = this.base_color >> 8 & 255, e = 255 & this.base_color, this.dark_color = Math.floor(s / 2) << 16 | Math.floor(i / 2) << 8 | Math.floor(e / 2), this.material
@@ -18949,16 +18477,58 @@
                         case "alloy":
                             s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#68A"), s.addColorStop(.5, "#FFF"), s.addColorStop(.5, "#765"), s.addColorStop(1, "#CCC");
                             break;
-                        case "titanium":
-                            s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#444"), s.addColorStop(.5, "#AAA"), s.addColorStop(.5, "#444"), s.addColorStop(1, "#111");
-                            break;
-                        case "gold":
-                            s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "hsl(40,100%,50%)"), s.addColorStop(.5, "hsl(40,100%,80%)"), s.addColorStop(.5, "hsl(20,100%,30%)"), s.addColorStop(1, "hsl(40,100%,50%)");
-                            break;
-                        case "carbon":
-                            for (s = t.createLinearGradient(0, 0, 0, i), h = Math.min(10, this.size / 10), l = a = 0, I = h - 1; a <= I; l = a += 1) s.addColorStop(l / h, "#000"), s.addColorStop((l + 1) / h, "#888");
-                            for (n = t.createLinearGradient(0, 0, 0, i), n.addColorStop(0, "#333"), n.addColorStop(.1, "#888"), l = o = 0, u = h - 1; o <= u; l = o += 1) n.addColorStop((l + .5) / h, "#000"), n.addColorStop(Math.min(1, (l + 1.5) / h), "#888");
-                            break;
+                            case "titanium":
+					s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#444"), s.addColorStop(.5, "#AAA"), s.addColorStop(.5, "#444"), s.addColorStop(1, "#111");
+					break;
+				case "gold":
+					s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "hsl(40,100%,50%)"), s.addColorStop(.5, "hsl(40,100%,80%)"), s.addColorStop(.5, "hsl(20,100%,30%)"), s.addColorStop(1, "hsl(40,100%,50%)");
+					break;
+				case "FullColor":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "hsl(" + this.hue + ",90%,50%)"), s.addColorStop(.5, "hsl(" + this.hue + ",90%,70%)"), s.addColorStop(.5, "hsl(" + this.hue + ",90%,30%)"), s.addColorStop(1, "hsl(" + this.hue + ",90%,60%)");
+                    break;
+				case "Copper":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#A07050"), s.addColorStop(.5, "#B4805D"), s.addColorStop(.5, "#A07050"), s.addColorStop(1, "#B4805D");
+                    break;
+				case "carbon":
+					for (s = t.createLinearGradient(0, 0, 0, i), h = Math.min(10, this.size / 10), n = a = 0, u = h - 1; a <= u; n = a += 1) s.addColorStop(n / h, "#000"), s.addColorStop((n + 1) / h, "#888");
+					for (l = t.createLinearGradient(0, 0, 0, i), l.addColorStop(0, "#333"), l.addColorStop(.1, "#888"), n = o = 0, d = h - 1; o <= d; n = o += 1) l.addColorStop((n + .5) / h, "#000"), l.addColorStop(Math.min(1, (n + 1.5) / h), "#888");
+					break;
+				case "Ruby":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#D63305"), s.addColorStop(.5, "#D10505"), s.addColorStop(.5, "#D10505"), s.addColorStop(1, "#D10505");
+                    break;
+                case "Amethyst":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#CC00D6"), s.addColorStop(.5, "#C840CF"), s.addColorStop(.5, "#CC00D6"), s.addColorStop(1, "#C840CF");
+                    break;
+                case "Emerald":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#00D677"), s.addColorStop(.5, "#00B64C"), s.addColorStop(.5, "#00D677"), s.addColorStop(1, "#00B64C");
+                    break;
+                case "Sapphire":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#3936F2"), s.addColorStop(.5, "#0F0CE2"), s.addColorStop(.5, "#3936F2"), s.addColorStop(1, "#0F0CE2");
+                    break;
+				case "Onyx":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "hsl(240,0%,0%)"), s.addColorStop(.5, "hsl(240,0%,19%)"), s.addColorStop(.5, "hsl(240,0%,0%)"), s.addColorStop(1, "hsl(240, 0%, 31%)");
+                    break;
+				case "Crystal":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#FFA040"), s.addColorStop(.5, "#FF0000"), s.addColorStop(.5, "#FF0000"), s.addColorStop(1, "#FF0000");
+                    break;
+                case "MidnightBlue":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "rgb(50, 50, 100)"), s.addColorStop(.5, "hsla(240, 43%, 21%, 1)"), s.addColorStop(.5, "hsla(240, 43%, 21%, 1)"), s.addColorStop(1, "rgb(50, 50, 100)");
+                    break;
+                case "SeaGreen":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#1affe4"), s.addColorStop(.5, "#00f078"), s.addColorStop(.5, "#00f078"), s.addColorStop(1, "#00f078");
+                    break;
+                case "Cyan":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#14bdff"), s.addColorStop(.5, "#05ffee"), s.addColorStop(.5, "#05ffee"), s.addColorStop(1, "#05ffee");
+                    break;
+                case "Peony":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#5713a4"), s.addColorStop(.5, "#c22e69"), s.addColorStop(.5, "#c22e69"), s.addColorStop(1, "#c22e69");
+                    break;
+				case "TopazYellow":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#df8b26"), s.addColorStop(.5, "#e5b20b"), s.addColorStop(.5, "#e5b20b"), s.addColorStop(1, "#e5b20b");
+                    break;
+                case "Strawberry":
+                    s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "hsla(350,80%,40%)"), s.addColorStop(.5, "hsla(350,80%,60%)"), s.addColorStop(.5, "hsla(355,90%,30%)"), s.addColorStop(1, "hsla(355,90%,75%)");
+                    break;
                         default:
                             s = t.createLinearGradient(0, 0, 0, i), s.addColorStop(0, "#EEE"), s.addColorStop(1, "#666")
                     }
@@ -19340,7 +18910,23 @@
                         alloy: "Alloy",
                         gold: "Gold",
                         titanium: "Titanium",
-                        carbon: "Carbon"
+                        carbon: "Carbon",
+				        X27: "Electric Blue",
+				        FullColor: "Full Color",
+                        Copper: "Copper",
+                        Diamond: "Diamond",
+				        Onyx: "Onyx",
+                        Ruby: "Ruby",
+                        Emerald: "Emerald",
+                        Sapphire: "Sapphire",
+                        Amethyst: "Amethyst",
+				        TopazYellow: "Topaz Yellow",
+				        Crystal: "Crystal",
+                        MidnightBlue: "Midnight Blue",
+                        SeaGreen: "Sea Green",
+                        Cyan: "Cyan",
+                        Peony: "Peony",
+                        Strawberry: "Strawberry"
                     },
                     laser: {
                         0: "Single",
