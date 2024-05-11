@@ -2954,8 +2954,11 @@ ga('send', 'pageview');</script>
                                     } else {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
                                             'data': {
+                                                'spectate': false,
+                                                'spectate_ship': 0x1,
                                                 'bonus': true,
                                                 'create': false,
+                                                'client_ship_id': String(Math.random()).slice(2),
                                                 'client_tr': 2.9
                                             }
                                         }));
@@ -34112,7 +34115,8 @@ ga('send', 'pageview');</script>
                                         mode: t.I1III.mode_id,
                                         mod_id: t.I1III.mode.mod_id,
                                         spectate: t.I1III.mode.spectate,
-                                        spectate_ship: t.I1III.mode.spectate_ship,                                                                                              
+                                        spectate_ship: t.I1III.mode.spectate_ship,
+                                        player_name: (new lO010).OO0l1(t.I1III.player_name),
                                         hue: t.hue,
                                         preferred: null != t.I1III.preferred && t.I1III.preferred,
                                         bonus: i,
