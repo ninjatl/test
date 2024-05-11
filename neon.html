@@ -2938,43 +2938,13 @@ ga('send', 'pageview');</script>
                                 window["boxwss" + _0x553300].addEventListener("open", _0x2a6715 => {
                                     if (localStorage.ECPVerified == "undefined") {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
-                                            'name': "ùov()",
-                                            'data': {
-                                                'spectate': false,
-                                                'spectate_ship': 0x1,
-                                                'player_name': localStorage.lastNickname,
-                                                'hue': localStorage.shipColor,
-                                                'preferred': parseInt(window.location.href.split('#')[1].split('@')[0]),
-                                                'bonus': true,
-                                                'ecp_key': localStorage.ECPKey,
-                                                'ecp_custom': {
-                                                    'badge': localStorage.badge,
-                                                    'finish': localStorage.finish,
-                                                    'laser': localStorage.laser
-                                                },
-                                                'steamid': null,
-                                                'create': false,
-                                                'client_ship_id': String(Math.random()).slice(2),
-                                                'client_tr': 2.9
+                                            
                                             }
                                         }));
                                     } else {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
-                                            'name': "ùov()",
-                                            'data': {
-                                                'spectate': false,
-                                                'spectate_ship': 0x1,
-                                                'player_name': localStorage.lastNickname,
-                                                'hue': localStorage.shipColor,
-                                                'preferred': parseInt(window.location.href.split('#')[1].split('@')[0]),
-                                                'bonus': true,
-                                                'ecp_key': null,
-                                                'steamid': null,
-                                                'create': false,
-                                                'client_ship_id': String(Math.random()).slice(2),
-                                                'client_tr': 2.9
                                             }
-                                        }));
+                                       
                                     }
                                     if (_0x624c08 == "team") {
                                         window["boxwss" + _0x553300].send("{\"name\":\"enter\",\"data\":{\"team\":" + _0x488c09 + ",\"spectate\":false}}");
