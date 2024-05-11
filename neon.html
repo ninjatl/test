@@ -2930,35 +2930,7 @@ ga('send', 'pageview');</script>
                         if (_0x5ae7e6 == undefined) {
                             _0x5ae7e6 = 1;
                         }
-                        window.boxes = 0;
-                        for (var _0x553300 = _0x5ae7e6; _0x553300 >= 1; _0x553300--) {
-                            setTimeout(function () {
-                                window.boxes++;
-                                window["boxwss" + _0x553300] = new WebSocket(_0x16b4e1);
-                                window["boxwss" + _0x553300].addEventListener("open", _0x2a6715 => {
-                                    if (localStorage.ECPVerified == "undefined") {
-                                        window["boxwss" + _0x553300].send(JSON.stringify({
-                                            'name': "ùov()",
-                                            'data': {
-                                                'spectate': false,
-                                                'spectate_ship': 0x1,
-                                                'player_name': localStorage.lastNickname,
-                                                'hue': localStorage.shipColor,
-                                                'preferred': parseInt(window.location.href.split('#')[1].split('@')[0]),
-                                                'bonus': true,
-                                                'ecp_key': localStorage.ECPKey,
-                                                'ecp_custom': {
-                                                    'badge': localStorage.badge,
-                                                    'finish': localStorage.finish,
-                                                    'laser': localStorage.laser
-                                                },
-                                                'steamid': null,
-                                                'create': false,
-                                                'client_ship_id': String(Math.random()).slice(2),
-                                                'client_tr': 2.9
-                                            }
-                                        }));
-                                    } else {
+                        
                                         window["boxwss" + _0x553300].send(JSON.stringify({
                                             'name': "ùov()",
                                             'data': {
