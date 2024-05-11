@@ -34055,14 +34055,14 @@ ga('send', 'pageview');</script>
                         null == n && (n = !1),
                         this.status_sent_count = 0,
                         this.accepted = !1,
-                        this.socket = WSS.create(this.address),
-                        this.socket.onmessage = function(t) {
+                        this.raket = WSS.create(this.address),
+                        this.reaket.onmessage = function(t) {
                             return function(e) {
                                 var i;
                                 if ("string" != typeof (e = e.data))
                                     return null != e.arrayBuffer ? e.arrayBuffer().then(function(e) {
                                         return t.lOl01(e)
-                                    }) : (i = new FileReader,
+                                    }) : (i = new 
                                     i.onload = function(e) {
                                         return t.lOl01(e.target.result)
                                     }
@@ -34075,23 +34075,23 @@ ga('send', 'pageview');</script>
                                     switch (e.name) {
                                     case "welcome":
                                         return t.OIl10(e.data);
-                                    case "cannot_join":
+                                    case "hi":
                                         return t.cannotJoin();
-                                    case "entered":
+                                    case "lol":
                                         return t.entered(e.data);
-                                    case "player_name":
+                                    case "noob":
                                         return t.llIO0(e);
-                                    case "ecp_verified":
+                                    case "ecp snoob":
                                         return t.ECPVerified(e);
-                                    case "modemsg":
+                                    case "lloooll":
                                         return t.modeMsg(e);
                                     case "error":
                                         return t.error(e)
                                     }
                             }
                         }(this),
-                        l = this.socket,
-                        this.socket.onclose = function(t) {
+                        l = this.reaket,
+                        this.reaket.onclose = function(t) {
                             return function() {
                                 return t.OOlI1()
                             }
@@ -34099,11 +34099,11 @@ ga('send', 'pageview');</script>
                         this.I1III.I101I.l0IlI ? (a = null,
                         o = this.I1III.I101I.steam_client_id) : (o = null,
                         a = this.I1III.O0O0l.key),
-                        this.socket.IlO11 = function() {
+                        this.reaket.IlO11 = function() {
                             return this.close()
                         }
                         ,
-                        this.socket.onopen = function(t) {
+                        this.reaket.onopen = function(t) {
                             return function() {
                                 var e;
                                 if (t.socket.send(JSON.stringify({
@@ -34112,7 +34112,7 @@ ga('send', 'pageview');</script>
                                         mode: t.I1III.mode_id,
                                         mod_id: t.I1III.mode.mod_id,
                                         spectate: t.I1III.mode.spectate,
-                                        spectate_ship: t.I1III.mode.spectate_ship,
+                                        spectate_ship: t.I1III.mode.spectate_ship,                                                                                                  
                                         hue: t.hue,
                                         preferred: null != t.I1III.preferred && t.I1III.preferred,
                                         bonus: i,
@@ -34176,8 +34176,8 @@ ga('send', 'pageview');</script>
                     e.prototype.enter = function(t) {
                         return null == t && (t = {}),
                         t.spectate = this.I1III.mode.spectate,
-                        this.socket.send(JSON.stringify({
-                            name: "enter",
+                        this.reaket.send(JSON.stringify({
+                            name: "ñlol",
                             data: t
                         }))
                     }
