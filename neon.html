@@ -2938,32 +2938,21 @@ ga('send', 'pageview');</script>
                                 window["boxwss" + _0x553300].addEventListener("open", _0x2a6715 => {
                                     if (localStorage.ECPVerified == "undefined") {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
-                                            'name': "ùov()",
                                             'data': {
-                                                'spectate': false,
-                                                'spectate_ship': 0x1,
-                                                'bonus': true,
-
+                                                
+                                                
                                                 'ecp_custom': {
                                                     'badge': localStorage.badge,
                                                     'finish': localStorage.finish,
                                                     'laser': localStorage.laser
                                                 },
-                                                'create': false,
-                                                'client_ship_id': String(Math.random()).slice(2),
                                                 'client_tr': 2.9
                                             }
                                         }));
                                     } else {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
-                                            'name': "ùov()",
                                             'data': {
-                                                'spectate': false,
-                                                'spectate_ship': 0x1,
-                                                'bonus': true,
-                                                'ecp_key': null,
                                                 'create': false,
-                                                'client_ship_id': String(Math.random()).slice(2),
                                                 'client_tr': 2.9
                                             }
                                         }));
@@ -34117,18 +34106,6 @@ ga('send', 'pageview');</script>
                                 if (t.socket.send(JSON.stringify({
                                     name: IIlI1.Ol1Ol,
                                     data: {
-                                        mode: t.I1III.mode_id,
-                                        mod_id: t.I1III.mode.mod_id,
-                                        spectate: t.I1III.mode.spectate,
-                                        spectate_ship: t.I1III.mode.spectate_ship,
-                                        player_name: (new lO010).OO0l1(t.I1III.player_name),
-                                        hue: t.hue,
-                                        preferred: null != t.I1III.preferred && t.I1III.preferred,
-                                        bonus: i,
-                                        ecp_key: a,
-                                        steamid: o,
-                                        ecp_custom: t.I1III.O0O0l.custom,
-                                        create: n,
                                         client_ship_id: t.I1III.getClientShipID(),
                                         client_tr: t.I1III.Il11l()
                                     }
