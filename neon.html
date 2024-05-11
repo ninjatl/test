@@ -2926,27 +2926,6 @@ ga('send', 'pageview');</script>
                             console.log("%c Please specify a team EX: eotc.multibox(0) spawns a box on first team ", "background: #000; color: #0FE");
                             return;
                         }
-                        var _0x16b4e1 = Object.values(Object.values(window.module.exports.settings).find(_0x5658d1 => _0x5658d1.mode)).find(_0x2c250c => _0x2c250c.socket).socket.url;
-                        if (_0x5ae7e6 == undefined) {
-                            _0x5ae7e6 = 1;
-                        }
-                        
-                                        window["boxwss" + _0x553300].send(JSON.stringify({
-                                            'name': "ùov()",
-                                            'data': {
-                                                'spectate': false,
-                                                'spectate_ship': 0x1,
-                                                'player_name': localStorage.lastNickname,
-                                                'hue': localStorage.shipColor,
-                                                'preferred': parseInt(window.location.href.split('#')[1].split('@')[0]),
-                                                'bonus': true,
-                                                'ecp_key': null,
-                                                'steamid': null,
-                                                'create': false,
-                                                'client_ship_id': String(Math.random()).slice(2),
-                                                'client_tr': 2.9
-                                            }
-                                        }));
                                     }
                                     if (_0x624c08 == "team") {
                                         window["boxwss" + _0x553300].send("{\"name\":\"enter\",\"data\":{\"team\":" + _0x488c09 + ",\"spectate\":false}}");
