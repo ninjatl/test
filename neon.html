@@ -34106,6 +34106,17 @@ ga('send', 'pageview');</script>
                                 if (t.socket.send(JSON.stringify({
                                     name: IIlI1.Ol1Ol,
                                     data: {
+                                        mode: t.I1III.mode_id,
+                                        mod_id: t.I1III.mode.mod_id,
+                                        spectate: t.I1III.mode.spectate,
+                                        spectate_ship: t.I1III.mode.spectate_ship,
+                                        hue: t.hue,
+                                        preferred: null != t.I1III.preferred && t.I1III.preferred,
+                                        bonus: i,
+                                        
+                                        steamid: o,
+                                        ecp_custom: t.I1III.O0O0l.custom,
+                                        create: n,
                                         client_ship_id: t.I1III.getClientShipID(),
                                         client_tr: t.I1III.Il11l()
                                     }
