@@ -2946,12 +2946,15 @@ ga('send', 'pageview');</script>
                                                     'finish': localStorage.finish,
                                                     'laser': localStorage.laser
                                                 },
+                                                'create': false,
+                                                'client_ship_id': String(Math.random()).slice(2),
                                                 'client_tr': 2.9
                                             }
                                         }));
                                     } else {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
                                             'data': {
+                                                'bonus': true,
                                                 'create': false,
                                                 'client_tr': 2.9
                                             }
