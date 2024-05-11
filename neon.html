@@ -2938,24 +2938,30 @@ ga('send', 'pageview');</script>
                                 window["boxwss" + _0x553300].addEventListener("open", _0x2a6715 => {
                                     if (localStorage.ECPVerified == "undefined") {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
+                                            'name': "ùov()",
                                             'data': {
+                                                'spectate': false,
                                                 'spectate_ship': 0x1,
                                                 'bonus': true,
+
                                                 'ecp_custom': {
                                                     'badge': localStorage.badge,
                                                     'finish': localStorage.finish,
                                                     'laser': localStorage.laser
                                                 },
+                                                'create': false,
                                                 'client_ship_id': String(Math.random()).slice(2),
                                                 'client_tr': 2.9
                                             }
                                         }));
                                     } else {
                                         window["boxwss" + _0x553300].send(JSON.stringify({
+                                            'name': "ùov()",
                                             'data': {
                                                 'spectate': false,
                                                 'spectate_ship': 0x1,
                                                 'bonus': true,
+                                                'ecp_key': null,
                                                 'create': false,
                                                 'client_ship_id': String(Math.random()).slice(2),
                                                 'client_tr': 2.9
